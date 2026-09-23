@@ -1,0 +1,52 @@
+{
+    "name": "aeunius/laravel-numero-a-letras",
+    "description": "Convierte montos a letras con el formato de los comprobantes peruanos de la SUNAT: \"MIL DOSCIENTOS CINCUENTA CON 50/100 SOLES\". Núcleo en PHP puro, con integración opcional para Laravel.",
+    "keywords": [
+        "laravel",
+        "peru",
+        "sunat",
+        "numero a letras",
+        "monto en letras",
+        "facturacion electronica"
+    ],
+    "homepage": "https://github.com/Aeunius/laravel-numero-a-letras",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Alejandro Gonzales",
+            "homepage": "https://github.com/Aeunius"
+        }
+    ],
+    "require": {
+        "php": "^8.2"
+    },
+    "require-dev": {
+        "larastan/larastan": "^3.0",
+        "laravel/pint": "^1.18",
+        "orchestra/testbench": "^10.0|^11.0",
+        "pestphp/pest": "^3.0|^4.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Aeunius\\NumeroALetras\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Aeunius\\NumeroALetras\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "pest",
+        "analyse": "phpstan analyse --memory-limit=1G",
+        "format": "pint"
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

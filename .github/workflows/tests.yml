@@ -1,0 +1,55 @@
+name: tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    name: PHP ${{ matrix.php }} · ${{ matrix.laravel && format('Laravel {0}', matrix.laravel) || 'sin Laravel' }}${{ matrix.stability == 'prefer-lowest' && ' · mínimas' || '' }}
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { php: '8.2', laravel: '', testbench: '', stability: prefer-lowest }
+          - { php: '8.5', laravel: '', testbench: '', stability: prefer-stable }
+          - { php: '8.2', laravel: '12', testbench: '^10.0', stability: prefer-lowest }
+          - { php: '8.2', laravel: '12', testbench: '^10.0', stability: prefer-stable }
+          - { php: '8.5', laravel: '12', testbench: '^10.0', stability: prefer-stable }
+          - { php: '8.3', laravel: '13', testbench: '^11.0', stability: prefer-stable }
+          - { php: '8.5', laravel: '13', testbench: '^11.0', stability: prefer-stable }
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: none
+
+      # Larastan solo lo usa static.yml; se quita para que no suba los mínimos de Laravel.
+      # Sin Laravel se quita también Testbench: el núcleo tiene que funcionar solo.
+      - name: Instalar dependencias
+        run: |
+          composer remove --dev larastan/larastan --no-update --no-interaction
+          if [ -n "${{ matrix.laravel }}" ]; then
+            composer require "laravel/framework:${{ matrix.laravel }}.*" "orchestra/testbench:${{ matrix.testbench }}" --no-update --no-interaction
+          else
+            composer remove --dev orchestra/testbench --no-update --no-interaction
+          fi
+          composer update --${{ matrix.stability }} --prefer-dist --no-interaction --no-progress
+
+      - name: Versiones instaladas
+        run: composer show | grep -E '^(laravel/framework|orchestra/testbench|pestphp/pest|phpunit/phpunit) ' || true
+
+      - name: Sin Laravel instalado
+        if: matrix.laravel == ''
+        run: "! composer show illuminate/support 2>/dev/null"
+
+      - run: vendor/bin/pest --ci
