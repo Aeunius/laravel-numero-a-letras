@@ -7,6 +7,10 @@ proyecto usa [versionado semántico](https://semver.org/lang/es/).
 
 ## [Sin publicar]
 
+## [1.0.0] - 2026-09-23
+
+Primera versión estable: la API pública queda fija hasta la 2.0.
+
 ### Agregado
 
 - Integración con Laravel 12 y 13: `NumeroALetrasServiceProvider` (se registra
@@ -42,5 +46,6 @@ Primera versión publicada.
   (`VEINTIUNA LIBRAS`, `DOSCIENTAS MIL LIBRAS`).
 - Excepción `OpcionNoValida` para monedas, formatos o conectores desconocidos.
 
-[Sin publicar]: https://github.com/Aeunius/laravel-numero-a-letras/compare/v0.2.0...HEAD
+[Sin publicar]: https://github.com/Aeunius/laravel-numero-a-letras/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/Aeunius/laravel-numero-a-letras/compare/v0.2.0...v1.0.0
 [0.2.0]: https://github.com/Aeunius/laravel-numero-a-letras/releases/tag/v0.2.0
