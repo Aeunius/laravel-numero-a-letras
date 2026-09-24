@@ -35,3 +35,7 @@ it('rechaza negativos', function () {
 it('rechaza desde mil billones', function () {
     Palabras::deEntero(Palabras::MAXIMO + 1);
 })->throws(NumeroFueraDeRango::class, 'supera el máximo que se puede convertir (999 999 999 999 999,99)');
+
+it('concuerda en femenino', function (int $numero, string $esperado) {
+    expect(Palabras::deEntero($numero, femenino: true))->toBe($esperado);
+})->with('femenino');

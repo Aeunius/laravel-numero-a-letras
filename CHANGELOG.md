@@ -17,3 +17,13 @@ proyecto usa [versionado semántico](https://semver.org/lang/es/).
   el medio hacia arriba.
 - Excepciones `NumeroFueraDeRango` (negativos y desde mil billones) y
   `NumeroNoValido` (texto que no es un número, `INF`, `NAN`).
+- Enum `Moneda` con soles (`PEN`), dólares (`USD`) y euros (`EUR`), y la
+  interfaz `Contracts\Moneda` para usar cualquier otra.
+- Opciones del conversor: `moneda()`, `soles()`, `dolares()`, `euros()`,
+  `mayusculas()`, `minusculas()`, `soloTexto()`, `formatoCentavos()` y
+  `conector()`.
+- Formato de centavos en texto: `UN SOL`, `VEINTIÚN SOLES CON VEINTIÚN
+  CÉNTIMOS`, `UN MILLÓN DE SOLES`.
+- `Palabras::deEntero()` acepta `femenino: true` para monedas femeninas
+  (`VEINTIUNA LIBRAS`, `DOSCIENTAS MIL LIBRAS`).
+- Excepción `OpcionNoValida` para monedas, formatos o conectores desconocidos.

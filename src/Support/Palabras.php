@@ -33,8 +33,13 @@ final class Palabras
      * Con $apocope, el número termina en "un" o "veintiún" en lugar de "uno" o
      * "veintiuno", como corresponde delante de un sustantivo ("veintiún soles").
      * Delante de "mil", "millones" y "billones" se aplica siempre.
+     *
+     * Con $femenino, concuerda con un sustantivo femenino: "una", "veintiuna",
+     * "doscientas". Alcanza a los miles ("doscientas mil libras") pero no a los
+     * millones ni billones, que concuerdan con "millón", masculino
+     * ("doscientos millones de libras").
      */
-    public static function deEntero(int $numero, bool $apocope = false): string
+    public static function deEntero(int $numero, bool $apocope = false, bool $femenino = false): string
     {
         if ($numero < 0) {
             throw NumeroFueraDeRango::negativo($numero);
@@ -55,7 +60,7 @@ final class Palabras
         return self::unir(
             self::escala($billones, 'un billón', 'billones'),
             self::escala($millones, 'un millón', 'millones'),
-            $resto > 0 ? self::menorQueUnMillon($resto, $apocope) : '',
+            $resto > 0 ? self::menorQueUnMillon($resto, $apocope, $femenino) : '',
         );
     }
 
@@ -64,11 +69,11 @@ final class Palabras
         return match (true) {
             $cantidad === 0 => '',
             $cantidad === 1 => $singular,
-            default => self::menorQueUnMillon($cantidad, true).' '.$plural,
+            default => self::menorQueUnMillon($cantidad, true, false).' '.$plural,
         };
     }
 
-    private static function menorQueUnMillon(int $numero, bool $apocope): string
+    private static function menorQueUnMillon(int $numero, bool $apocope, bool $femenino): string
     {
         $miles = intdiv($numero, 1000);
         $resto = $numero % 1000;
@@ -77,13 +82,13 @@ final class Palabras
             match (true) {
                 $miles === 0 => '',
                 $miles === 1 => 'mil',
-                default => self::menorQueMil($miles, true).' mil',
+                default => self::menorQueMil($miles, true, $femenino).' mil',
             },
-            $resto > 0 ? self::menorQueMil($resto, $apocope) : '',
+            $resto > 0 ? self::menorQueMil($resto, $apocope, $femenino) : '',
         );
     }
 
-    private static function menorQueMil(int $numero, bool $apocope): string
+    private static function menorQueMil(int $numero, bool $apocope, bool $femenino): string
     {
         if ($numero === 100) {
             return 'cien';
@@ -92,16 +97,25 @@ final class Palabras
         $centenas = intdiv($numero, 100);
         $resto = $numero % 100;
 
+        $centena = $centenas > 0 ? self::CENTENAS[$centenas] : '';
+
+        // doscientos → doscientas; "ciento" no cambia.
+        if ($femenino && $centenas > 1) {
+            $centena = substr($centena, 0, -2).'as';
+        }
+
         return self::unir(
-            $centenas > 0 ? self::CENTENAS[$centenas] : '',
-            $resto > 0 ? self::menorQueCien($resto, $apocope) : '',
+            $centena,
+            $resto > 0 ? self::menorQueCien($resto, $apocope, $femenino) : '',
         );
     }
 
-    private static function menorQueCien(int $numero, bool $apocope): string
+    private static function menorQueCien(int $numero, bool $apocope, bool $femenino): string
     {
         if ($numero < 30) {
             return match (true) {
+                $femenino && $numero === 1 => 'una',
+                $femenino && $numero === 21 => 'veintiuna',
                 $apocope && $numero === 1 => 'un',
                 $apocope && $numero === 21 => 'veintiún',
                 default => self::BASICOS[$numero],
@@ -113,6 +127,7 @@ final class Palabras
 
         return match (true) {
             $unidad === 0 => $decena,
+            $femenino && $unidad === 1 => $decena.' y una',
             $apocope && $unidad === 1 => $decena.' y un',
             default => $decena.' y '.self::BASICOS[$unidad],
         };
