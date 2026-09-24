@@ -52,4 +52,5 @@ jobs:
         if: matrix.laravel == ''
         run: "! composer show illuminate/support 2>/dev/null"
 
-      - run: vendor/bin/pest --ci
+      # Sin Laravel no hay Testbench: solo corren los tests del núcleo.
+      - run: vendor/bin/pest --ci ${{ matrix.laravel == '' && '--testsuite=Unit' || '' }}

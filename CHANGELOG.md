@@ -7,6 +7,16 @@ proyecto usa [versionado semántico](https://semver.org/lang/es/).
 
 ## [Sin publicar]
 
+### Agregado
+
+- Integración con Laravel 12 y 13: `NumeroALetrasServiceProvider` (se registra
+  solo), facade `NumeroALetras` y configuración publicable con
+  `php artisan vendor:publish --tag=numero-a-letras-config`.
+- La moneda por defecto de la configuración acepta un código ISO o una clase
+  propia que implemente `Contracts\Moneda`.
+- Helper global `numero_a_letras()`, que usa la configuración dentro de Laravel
+  y las opciones por defecto fuera de él.
+
 ## [0.2.0] - 2026-09-23
 
 Primera versión publicada.

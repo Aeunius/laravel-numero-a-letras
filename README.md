@@ -21,7 +21,55 @@ El núcleo es PHP puro y funciona sin Laravel; la integración con Laravel
 composer require aeunius/laravel-numero-a-letras
 ```
 
-## Uso
+## Uso en Laravel
+
+El paquete se registra solo. Usa el facade o el helper:
+
+```php
+use Aeunius\NumeroALetras\Facades\NumeroALetras;
+
+NumeroALetras::convertir(1250.50);
+// "MIL DOSCIENTOS CINCUENTA CON 50/100 SOLES"
+
+NumeroALetras::moneda('USD')->convertir(99.90);
+// "NOVENTA Y NUEVE CON 90/100 DÓLARES AMERICANOS"
+
+numero_a_letras(1250.50);
+// lo mismo que NumeroALetras::convertir()
+```
+
+En una plantilla Blade:
+
+```blade
+<p>SON: {{ numero_a_letras($factura->total) }}</p>
+```
+
+### Configuración
+
+Las opciones por defecto del facade y del helper se cambian publicando la
+configuración:
+
+```bash
+php artisan vendor:publish --tag=numero-a-letras-config
+```
+
+```php
+// config/numero-a-letras.php
+return [
+    'moneda' => 'PEN',                // 'USD', 'EUR' o una clase que implemente Contracts\Moneda
+    'mayusculas' => true,
+    'formato_centavos' => 'fraccion', // o 'texto'
+    'conector' => 'con',              // o 'y'
+];
+```
+
+Las opciones que encadenas en una llamada (`NumeroALetras::dolares()->...`) solo
+valen para esa llamada; la siguiente vuelve a usar la configuración.
+
+## Uso sin Laravel
+
+El núcleo no depende de Laravel. El helper `numero_a_letras()` también funciona,
+con las opciones por defecto.
 
 ```php
 use Aeunius\NumeroALetras\Support\Conversor;
@@ -38,7 +86,7 @@ $conversor->convertir(1000000);      // "UN MILLÓN CON 00/100 SOLES"
 
 ### Opciones
 
-El conversor es inmutable: cada opción devuelve uno nuevo y el original no cambia.
+Estas opciones valen igual para `new Conversor` y para el facade. El conversor es inmutable: cada opción devuelve uno nuevo y el original no cambia.
 
 ```php
 $conversor->moneda('USD')->convertir(99.90);
