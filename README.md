@@ -207,6 +207,26 @@ que los soles). El paquete no recorta el texto, porque un monto cortado sería
 un monto equivocado: si emites comprobantes por esos montos, comprueba el largo
 antes de enviarlo.
 
+## En JavaScript
+
+[`@aeunius/monto-en-letras`](https://github.com/Aeunius/monto-en-letras-js) da
+el mismo texto en el navegador o en Node, porque se prueba contra los datasets
+de este paquete (`tests/Datasets/`). Sirve para mostrar el monto en letras en
+un formulario sin llamar al servidor:
+
+```bash
+npm install @aeunius/monto-en-letras
+```
+
+```ts
+import { convertir } from '@aeunius/monto-en-letras';
+
+convertir(1250.50); // "MIL DOSCIENTOS CINCUENTA CON 50/100 SOLES"
+```
+
+Si cambias una regla, cambia primero el dataset aquí y publica un tag: el
+paquete de JavaScript fija sus datasets a un tag de este repositorio.
+
 ## Pruebas
 
 Todo corre en Docker; no hace falta PHP instalado.
